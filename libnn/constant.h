@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0
+// Author: Antoni Przybylik
+
 #ifndef CONSTANT_H_
 #define CONSTANT_H_
 

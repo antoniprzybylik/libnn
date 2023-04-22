@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0
+// Author: Antoni Przybylik
+
 #ifndef EXCEPTIONS_H_
 #define EXCEPTIONS_H_
 

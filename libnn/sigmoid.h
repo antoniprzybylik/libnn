@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0
+// Author: Antoni Przybylik
+
 #ifndef SIGMOID_H_
 #define SIGMOID_H_
 

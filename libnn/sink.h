@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0
+// Author: Antoni Przybylik
+
 #ifndef SINK_H_
 #define SINK_H_
 

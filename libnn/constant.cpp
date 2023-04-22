@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0
+// Author: Antoni Przybylik
+
 #include "constant.h"
 
 Constant::Constant(rl_t value) :
