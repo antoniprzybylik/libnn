@@ -3,6 +3,12 @@
 This is just a test. I do not intend to maintain
 this library long term.
 
+The library can train a network
+defined in form of directed acyclic
+graph. Currently there are three
+types of neurons: Constant (fixed output),
+sigmoid and sum. 
+
 # Content
 
 This repository contains libnn library code
