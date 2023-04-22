@@ -9,5 +9,6 @@ This repository contains libnn library code
 in `libnn` directory and simple demo demonstrating
 use of this library in `demo` directory.
 
-![](docs/demo6.png)
-*Results of function approximation by network with 6 sigmoidal neurons.*
+| ![](docs/demo6.png) |
+| :--: |
+| *Results of function approximation by network with 6 sigmoidal neurons.* |
