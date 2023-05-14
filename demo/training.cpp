@@ -33,7 +33,7 @@ rl_t cost(const std::vector<rl_t> &x,
 	return result;
 }
 
-void single_forward(Neuron *const sink)
+void apply_forward(Neuron *const sink, void (*f)(Neuron*))
 {
 	std::queue<Neuron*> q;
 	std::stack<Neuron*> s;
@@ -63,67 +63,71 @@ void single_forward(Neuron *const sink)
 
 	while (!s.empty()) {
 		v = s.top();
-		v->forward();
 		s.pop();
+		f(v);
 	}
+}
+
+static
+void single_forward_op(Neuron *n)
+{
+	n->forward();
+}
+
+void single_forward(Neuron *const sink)
+{
+	apply_forward(sink, single_forward_op);
+}
+
+void apply_backward(Neuron *const sink, void (*f)(Neuron*))
+{
+	std::queue<Neuron*> q;
+	std::unordered_map<Neuron*, bool> queued;
+
+	std::vector<Neuron*>::iterator i;
+
+	Neuron *v;
+
+	q.push(sink);
+	queued[sink] = true;
+
+	while (!q.empty()) {
+		v = q.front();
+		q.pop();
+
+		f(v);
+		
+		for (i = v->prev.begin();
+		     i != v->prev.end();
+		     i++) {
+			if (!queued[*i]) {
+				q.push(*i);
+				queued[*i] = true;
+			}
+		}
+	}
+}
+
+static
+void single_backward_op(Neuron *n)
+{
+	n->back();
+	n->accumulate();
 }
 
 void single_backward(Neuron *const sink)
 {
-	std::queue<Neuron*> q;
-	std::unordered_map<Neuron*, bool> queued;
+	apply_backward(sink, single_backward_op);
+}
 
-	std::vector<Neuron*>::iterator i;
-
-	Neuron *v;
-
-	q.push(sink);
-	queued[sink] = true;
-
-	while (!q.empty()) {
-		v = q.front();
-		q.pop();
-
-		v->back();
-		v->accumulate();
-		
-		for (i = v->prev.begin();
-		     i != v->prev.end();
-		     i++) {
-			if (!queued[*i]) {
-				q.push(*i);
-				queued[*i] = true;
-			}
-		}
-	}
+static
+void optimize_op(Neuron *n)
+{
+	n->optimize();
+	n->zero_delta();
 }
 
 void optimize(Neuron *const sink)
 {
-	std::queue<Neuron*> q;
-	std::unordered_map<Neuron*, bool> queued;
-
-	std::vector<Neuron*>::iterator i;
-
-	Neuron *v;
-
-	q.push(sink);
-	queued[sink] = true;
-
-	while (!q.empty()) {
-		v = q.front();
-		q.pop();
-
-		v->optimize();
-		v->zero_delta();
-		
-		for (i = v->prev.begin();
-		     i != v->prev.end();
-		     i++) {
-			if (!queued[*i]) {
-				q.push(*i);
-				queued[*i] = true;
-			}
-		}
-	}
+	apply_backward(sink, optimize_op);
 }
