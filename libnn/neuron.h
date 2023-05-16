@@ -19,7 +19,10 @@ public:
 	virtual ~Neuron(void);
 
 	std::vector<Neuron*> prev;
-	Neuron *next;
+	std::vector<Neuron*> next;
+
+	size_t params_cnt(void) const
+	       {return prev.size();}
 
 	virtual void forward(void) = 0;
 	virtual void back(void) = 0;
@@ -31,7 +34,9 @@ public:
 
 	virtual void accumulate(void) = 0;
 	virtual void zero_delta(void) = 0;
-	virtual void optimize(void) = 0;
+	virtual void step(const std::vector<rl_t>&) = 0;
+
+	virtual const std::vector<rl_t> &get_delta(void) const = 0;
 };
 
 #endif /* NEURON_H_ */

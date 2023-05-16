@@ -21,7 +21,9 @@ public:
 
 	void accumulate(void) override;
 	void zero_delta(void) override;
-	void optimize(void) override;
+	void step(const std::vector<rl_t>&) override;
+
+	const std::vector<rl_t> &get_delta(void) const override;
 };
 
 #endif /* SINK_H_ */

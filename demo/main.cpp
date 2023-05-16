@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
 // Author: Antoni Przybylik
 
-#include "net.h"
+#include "simple_net.h"
+#include "training.h"
 
 int main(void)
 {

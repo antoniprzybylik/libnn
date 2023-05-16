@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
 // Author: Antoni Przybylik
 
+#include <stdexcept>
+
 #include "sink.h"
 
 Sink::Sink(void) :
@@ -23,7 +25,7 @@ void Sink::back(void)
 void Sink::attach(Neuron *neuron)
 {
 	this->prev.push_back(neuron);
-	neuron->next = this;
+	neuron->next.push_back(this);
 }
 
 void Sink::set_value(rl_t value)
@@ -44,6 +46,13 @@ void Sink::zero_delta(void)
 {
 }
 
-void Sink::optimize(void)
+void Sink::step(const std::vector<rl_t> &p)
 {
+}
+
+static const std::vector<rl_t> empty_vector;
+
+const std::vector<rl_t> &Sink::get_delta(void) const
+{
+	return empty_vector;
 }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0
 // Author: Antoni Przybylik
 
+#include <stdexcept>
 #include <random>
 #include <cmath>
 
@@ -9,8 +10,7 @@
 Sigmoid::Sigmoid(void) :
 Neuron(),
 weights(),
-accumulated_delta(),
-lr(0)
+accumulated_delta()
 {
 }
 
@@ -52,7 +52,13 @@ rl_t sigma_derivative(rl_t x)
 
 void Sigmoid::back(void)
 {
-	this->back_signal = next->out_back(this);	
+	std::vector<Neuron*>::const_iterator it;
+
+	this->back_signal = 0;
+	for (it = next.cbegin();
+	     it != next.cend(); it++) {
+		this->back_signal += (*it)->out_back(this);	
+	}
 }
 
 void Sigmoid::attach(Neuron *neuron)
@@ -64,7 +70,7 @@ void Sigmoid::attach(Neuron *neuron)
 	rl_t weight = unif(re);
 
 	this->prev.push_back(neuron);
-	neuron->next = this;
+	neuron->next.push_back(this);
 
 	this->weights.push_back(weight);
 	this->accumulated_delta.push_back(0.0L);
@@ -121,7 +127,7 @@ void Sigmoid::accumulate(void)
 	     i1++, i2++) {
 		delta = this->back_signal *
 			sd_value *
-			(*i1)->out() * (-1.0L);
+			(*i1)->out();
 
 		*i2 += delta;
 	}
@@ -138,21 +144,28 @@ void Sigmoid::zero_delta(void)
 	}
 }
 
-void Sigmoid::optimize(void)
+void Sigmoid::step(const std::vector<rl_t> &p)
 {
 	std::vector<rl_t>::const_iterator i1;
 	std::vector<rl_t>::iterator i2;
 
-	for (i1 = accumulated_delta.begin(),
+	if (p.size() != weights.size()) {
+		throw std::runtime_error(
+			"Step vector has "
+			"different size than "
+			"weights vector.");
+	}
+
+	for (i1 = p.begin(),
 	     i2 = weights.begin();
-	     i1 != accumulated_delta.end() &&
+	     i1 != p.end() &&
 	     i2 != weights.end();
 	     i1++, i2++) {
-		*i2 += (*i1) * this->lr;
+		*i2 += (*i1);
 	}
 }
 
-void Sigmoid::set_lr(rl_t lr)
+const std::vector<rl_t> &Sigmoid::get_delta(void) const
 {
-	this->lr = lr;
+	return accumulated_delta;
 }

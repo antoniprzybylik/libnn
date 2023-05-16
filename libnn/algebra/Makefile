@@ -1,19 +1,16 @@
 .PHONY: all clean build debug
 .SUFFIXES: .o .cpp
 
-PROJECT = demo
+TARGET = algebra.o
 
 CXX = g++
-LINK = g++
-STRIP = strip
+LINK = ld
 
-CXXFLAGS = -MMD -MP -Wall -I../libnn/ -std=c++20 -pedantic
-LDFLAGS = -fPIC -L../libnn/ -lnn
+CXXFLAGS = -MMD -MP -Wall -std=c++20 -pedantic
 
 OBJS = \
-main.o \
-training.o \
-simple_net.o \
+matrix.o \
+vector.o \
 
 DEPS = $(OBJS:%.o=%.d)
 
@@ -23,12 +20,11 @@ compile: $(OBJS)
 
 build: CXXFLAGS += -O3
 build: compile
-	$(LINK) $(OBJS) -o $(PROJECT) $(LDFLAGS)
-	$(STRIP) $(PROJECT)
+	$(LINK) $(OBJS) -o $(TARGET) -relocatable
 
 debug: CXXFLAGS += -g
 debug: clean | compile
-	$(LINK) $(OBJS) -o $(PROJECT) $(LDFLAGS)
+	$(LINK) $(OBJS) -o $(TARGET) -relocatable
 
 clean:
 	rm -f $(OBJS) $(DEPS)

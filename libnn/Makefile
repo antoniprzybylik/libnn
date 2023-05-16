@@ -1,4 +1,4 @@
-.PHONY: all clean build debug
+.PHONY: all clean build debug algebra
 .SUFFIXES: .o .cpp
 
 TARGET = libnn.a
@@ -14,12 +14,16 @@ constant.o \
 sink.o \
 sigmoid.o \
 sum.o \
+algebra/algebra.o \
 
 DEPS = $(OBJS:%.o=%.d)
 
 all: build
 
-compile: $(OBJS)
+algebra:
+	$(MAKE) -C ./algebra/
+
+compile: algebra $(OBJS)
 
 build: CXXFLAGS += -O3
 build: compile
