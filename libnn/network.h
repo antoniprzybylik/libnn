@@ -33,6 +33,9 @@ public:
 	void backward(void);
 	RowVector<rl_t> accumulated_grad(void);
 	void step(const ColumnVector<rl_t>&);
+
+	void save(void);
+	void restore(void);
 };
 
 [[maybe_unused]] static
@@ -120,6 +123,48 @@ void Network<in_size,
 		       sinks.begin(), [](const std::shared_ptr<Sink> &smart_ptr)
 				      { return smart_ptr.get(); });
 	apply_backward(sinks, zero_grad_op);
+}
+
+[[maybe_unused]] static
+void save_op(Neuron *const n)
+{
+	n->save();
+}
+
+template<int in_size, int out_size,
+	 int neurons_cnt, int params_cnt>
+void Network<in_size,
+	     out_size,
+	     neurons_cnt,
+	     params_cnt>::save(void)
+{
+	std::vector<Neuron*> sinks(out_size);
+	
+	std::transform(sink_layer.begin(), sink_layer.end(),
+		       sinks.begin(), [](const std::shared_ptr<Sink> &smart_ptr)
+				      { return smart_ptr.get(); });
+	apply_backward(sinks, save_op);
+}
+
+[[maybe_unused]] static
+void restore_op(Neuron *const n)
+{
+	n->restore();
+}
+
+template<int in_size, int out_size,
+	 int neurons_cnt, int params_cnt>
+void Network<in_size,
+	     out_size,
+	     neurons_cnt,
+	     params_cnt>::restore(void)
+{
+	std::vector<Neuron*> sinks(out_size);
+	
+	std::transform(sink_layer.begin(), sink_layer.end(),
+		       sinks.begin(), [](const std::shared_ptr<Sink> &smart_ptr)
+				      { return smart_ptr.get(); });
+	apply_backward(sinks, restore_op);
 }
 
 [[maybe_unused]] static
