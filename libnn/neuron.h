@@ -37,6 +37,9 @@ public:
 	virtual void step(const std::vector<rl_t>&) = 0;
 
 	virtual const std::vector<rl_t> &get_delta(void) const = 0;
+
+	virtual void save(void) = 0;
+	virtual void restore(void) = 0;
 };
 
 #endif /* NEURON_H_ */

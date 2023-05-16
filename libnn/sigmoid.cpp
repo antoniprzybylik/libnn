@@ -169,3 +169,27 @@ const std::vector<rl_t> &Sigmoid::get_delta(void) const
 {
 	return accumulated_delta;
 }
+
+void Sigmoid::save(void)
+{
+	size_t i;
+
+	saved_weights.resize(weights.size());
+	for (i = 0; i < weights.size(); i++)
+		saved_weights[i] = weights[i];
+}
+
+void Sigmoid::restore(void)
+{
+	size_t i;
+
+	if (weights.size() !=
+	    saved_weights.size()) {
+		throw std::runtime_error(
+			"Connections were added "
+			"since last save. ");
+	}
+
+	for (i = 0; i < weights.size(); i++)
+		weights[i] = saved_weights[i];
+}

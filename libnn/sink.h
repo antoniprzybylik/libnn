@@ -24,6 +24,9 @@ public:
 	void step(const std::vector<rl_t>&) override;
 
 	const std::vector<rl_t> &get_delta(void) const override;
+
+	void save(void) override;
+	void restore(void) override;
 };
 
 #endif /* SINK_H_ */

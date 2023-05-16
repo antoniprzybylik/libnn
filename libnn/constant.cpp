@@ -51,6 +51,14 @@ const std::vector<rl_t> &Constant::get_delta(void) const
 	return empty_vector;
 }
 
+void Constant::save(void)
+{
+}
+
+void Constant::restore(void)
+{
+}
+
 void Constant::set_value(rl_t value)
 {
 	this->signal = value;

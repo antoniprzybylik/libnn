@@ -8,6 +8,8 @@
 
 class Sum : public Neuron {
 private:	
+	std::vector<rl_t> saved_weights;
+
 	std::vector<rl_t> weights;
 	std::vector<rl_t> accumulated_delta;
 
@@ -27,6 +29,9 @@ public:
 	void step(const std::vector<rl_t>&) override;
 
 	const std::vector<rl_t> &get_delta(void) const override;
+
+	void save(void) override;
+	void restore(void) override;
 };
 
 #endif /* SUM_H_ */

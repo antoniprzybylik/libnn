@@ -56,3 +56,11 @@ const std::vector<rl_t> &Sink::get_delta(void) const
 {
 	return empty_vector;
 }
+
+void Sink::save(void)
+{
+}
+
+void Sink::restore(void)
+{
+}

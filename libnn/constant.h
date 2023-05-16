@@ -26,6 +26,9 @@ public:
 
 	const std::vector<rl_t> &get_delta(void) const override;
 
+	void save(void) override;
+	void restore(void) override;
+
 	void set_value(rl_t);
 };
 
