@@ -7,8 +7,8 @@ CXX = g++
 LINK = g++
 STRIP = strip
 
-CXXFLAGS = -MMD -MP -Wall -I../libnn/ -std=c++20 -pedantic
-LDFLAGS = -fPIC -L../libnn/ -lnn
+CXXFLAGS = -MMD -MP -Wall -I../../libnn/ -std=c++20 -pedantic
+LDFLAGS = -fPIC -L../../libnn/ -lnn
 
 OBJS = \
 main.o \
