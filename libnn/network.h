@@ -1,6 +1,9 @@
 #ifndef NETWORK_H_
 #define NETWORK_H_
 
+#include <json/json.h>
+#include <json/value.h>
+
 #include <vector>
 #include <array>
 #include <queue>
@@ -17,6 +20,8 @@ template<int in_size, int out_size,
 	 int neurons_cnt, int params_cnt>
 class Network {
 protected:
+	char magic[9];
+
 	/* Constant Neuron (for bias). */
 	Constant cx;
 
@@ -37,6 +42,9 @@ public:
 
 	void save(void);
 	void restore(void);
+
+	Json::Value dump(void);
+	void load(Json::Value);
 };
 
 [[maybe_unused]] static
@@ -345,6 +353,62 @@ void Network<in_size,
 	v2 = &p;
 	v2_idx = 0;
 	apply_forward(sources, step_op);
+}
+
+template<int in_size, int out_size,
+	 int neurons_cnt, int params_cnt>
+Json::Value Network<in_size,
+		    out_size,
+		    neurons_cnt,
+		    params_cnt>::dump(void)
+{
+	int i, j, k;
+
+	Json::Value d_root;
+	d_root["magic"] = magic;
+	
+	Json::Value &d_layers = d_root["layers"];
+	for (i = 0; i < (int) layers.size(); i++) {
+		Json::Value &d_layer = d_layers[i];
+		for (j = 0; j < (int) layers[i].size(); j++) {
+			Json::Value &d_neuron = d_layer[j];
+			const std::vector<rl_t> &params = layers[i][j]->get_params();
+
+			for (k = 0; k < (int) params.size(); k++)
+				d_neuron[k] = (double) params[k];
+		}
+	}
+
+	return d_root;
+}
+
+template<int in_size, int out_size,
+	 int neurons_cnt, int params_cnt>
+void Network<in_size,
+	     out_size,
+	     neurons_cnt,
+	     params_cnt>::load(Json::Value d_root)
+{
+	std::vector<rl_t> params;
+	int i, j, k;
+
+	if (d_root["magic"].asString() != std::string(magic)) {
+		throw std::runtime_error(
+			"Bad magic.");
+	}
+	
+	Json::Value &d_layers = d_root["layers"];
+	for (i = 0; i < (int) layers.size(); i++) {
+		Json::Value &d_layer = d_layers[i];
+		for (j = 0; j < (int) layers[i].size(); j++) {
+			Json::Value &d_neuron = d_layer[j];
+			params.resize(layers[i][j]->params_cnt());
+			for (k = 0; k < (int) params.size(); k++)
+				params[k] = atof(d_neuron[k].asString().c_str());
+
+			layers[i][j]->set_params(params);
+		}
+	}
 }
 
 #endif /* NETWORK_H_ */

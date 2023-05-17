@@ -46,7 +46,11 @@ void Sink::zero_delta(void)
 {
 }
 
-void Sink::step(const std::vector<rl_t> &p)
+void Sink::set_params(const std::vector<rl_t>&)
+{
+}
+
+void Sink::step(const std::vector<rl_t>&)
 {
 }
 

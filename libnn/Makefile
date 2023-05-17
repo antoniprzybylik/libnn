@@ -16,6 +16,9 @@ sigmoid.o \
 sum.o \
 algebra/algebra.o \
 
+LIBS = \
+/usr/lib/libjsoncpp.a \
+
 DEPS = $(OBJS:%.o=%.d)
 
 all: build
@@ -27,12 +30,12 @@ compile: algebra $(OBJS)
 
 build: CXXFLAGS += -O3
 build: compile
-	ar r $(TARGET) $(OBJS)
+	ar -rcT $(TARGET) $(OBJS) $(LIBS)
 	ranlib $(TARGET)
 
 debug: CXXFLAGS += -DGLIBCXX_DEBUG -g
 debug: clean | compile
-	ar r $(TARGET) $(OBJS)
+	ar -rcT $(TARGET) $(OBJS) $(LIBS)
 	ranlib $(TARGET)
 
 clean:

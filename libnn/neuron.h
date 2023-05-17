@@ -35,6 +35,8 @@ public:
 
 	virtual void accumulate(void) = 0;
 	virtual void zero_delta(void) = 0;
+
+	virtual void set_params(const std::vector<rl_t>&) = 0;
 	virtual void step(const std::vector<rl_t>&) = 0;
 
 	virtual const std::vector<rl_t> &get_params(void) const = 0;

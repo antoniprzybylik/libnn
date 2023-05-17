@@ -21,6 +21,8 @@ public:
 
 	void accumulate(void) override;
 	void zero_delta(void) override;
+
+	void set_params(const std::vector<rl_t>&) override;
 	void step(const std::vector<rl_t>&) override;
 
 	const std::vector<rl_t> &get_params(void) const override;

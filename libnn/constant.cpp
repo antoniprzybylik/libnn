@@ -40,7 +40,11 @@ void Constant::zero_delta(void)
 {
 }
 
-void Constant::step(const std::vector<rl_t> &p)
+void Constant::set_params(const std::vector<rl_t>&)
+{
+}
+
+void Constant::step(const std::vector<rl_t>&)
 {
 }
 

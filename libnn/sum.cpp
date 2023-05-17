@@ -102,6 +102,27 @@ void Sum::zero_delta(void)
 	}
 }
 
+void Sum::set_params(const std::vector<rl_t> &params)
+{
+	std::vector<rl_t>::const_iterator i1;
+	std::vector<rl_t>::iterator i2;
+
+	if (params.size() != weights.size()) {
+		throw std::runtime_error(
+			"Params vector has "
+			"different size than "
+			"weights vector.");
+	}
+
+	for (i1 = params.begin(),
+	     i2 = weights.begin();
+	     i1 != params.end() &&
+	     i2 != weights.end();
+	     i1++, i2++) {
+		*i2 = (*i1);
+	}
+}
+
 void Sum::step(const std::vector<rl_t> &p)
 {
 	std::vector<rl_t>::const_iterator i1;
