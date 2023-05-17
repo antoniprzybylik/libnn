@@ -133,7 +133,7 @@ void train_net(void)
 		nn.step(-p*g);
 		
 		y_values = net_forward(x_values);
-		std::cout << "Step " << i << ". "
+		std::cout << "I " << i << ". "
 			  << "Cost: "
 			  << cost(y_values, d_values) << "\n";
 	}
