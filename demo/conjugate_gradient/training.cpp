@@ -184,7 +184,6 @@ void train_net(void)
 	/* Wektor kierunku. */
 	RowVector<rl_t> d(params_cnt);
 
-	/* Współczynnik Polaka-Ribiere'a. */
 	rl_t beta;
 
 	/* Wyłączamy synchronizację wypisywania. */
@@ -205,15 +204,20 @@ void train_net(void)
 	std::cout << std::endl;
 
 	/* Trenujemy sieć. */
-	for (i = 0; i < 1000; i++) {
+	for (i = 0; i < 10000; i++) {
 		w = nn.params();
 		g = net_accumulated_grad(x_values, d_values);
 
 		if (i == 0) {
 			d = -1.0L*g;
 		} else {
+			// Polak-Ribiere
+			//beta = (w * (w - wm1).transpose()) /
+			//       (wm1 * wm1.transpose());
+
+			// Hestenes-Stiefel
 			beta = (w * (w - wm1).transpose()) /
-			       (wm1 * wm1.transpose());
+			       (d * (wm1 - w).transpose());
 			d = -1.0L*g + beta*d;
 		}
 	
