@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <iomanip>
 
 #include "simple_net.h"
 #include "algebra/vector.h"
@@ -133,8 +134,18 @@ void train_net(void)
 		nn.step(-p*g);
 		
 		y_values = net_forward(x_values);
-		std::cout << "I " << i << ". "
+		std::cout << std::fixed << std::setprecision(10)
+			  << "I "
+			  << std::setfill(' ') << std::setw(8)
+			  << i << ".  "
 			  << "Cost: "
-			  << cost(y_values, d_values) << "\n";
+			  << std::setfill(' ') << std::setw(12)
+			  << cost(y_values, d_values) << ".  "
+			  << "Step: "
+			  << std::setfill(' ') << std::setw(12)
+			  << p << ".  "
+			  << "|g|: "
+			  << std::setfill(' ') << std::setw(12)
+			  << norm(g) << "\n";
 	}
 }
