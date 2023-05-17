@@ -383,6 +383,24 @@ RowVector<T> operator+(RowVector<T> v1, const RowReference<T> &&v2)
 }
 
 template <typename T>
+RowVector<T> operator-(RowVector<T> v1, const RowVector<T> &v2)
+{
+	return (v1 -= v2);
+}
+
+template <typename T>
+RowReference<T> operator-(RowReference<T> v1, const RowVector<T> &v2)
+{
+	return (RowVector(v1) -= v2);
+}
+
+template <typename T>
+RowVector<T> operator-(RowVector<T> v1, const RowReference<T> &&v2)
+{
+	return (v1 -= v2);
+}
+
+template <typename T>
 ColumnVector<T> operator-(ColumnVector<T> v1,
 		          const ColumnVector<T> &v2)
 {
@@ -406,6 +424,8 @@ template long double operator*(const RowVector<long double> &v1, const ColumnVec
 template RowVector<long double> operator*(long double c, RowVector<long double> v);
 template ColumnVector<long double> operator*(long double c, ColumnVector<long double> v);
 template RowVector<long double> operator+(RowVector<long double> v1,
+					  const RowVector<long double> &v2);
+template RowVector<long double> operator-(RowVector<long double> v1,
 					  const RowVector<long double> &v2);
 template ColumnVector<long double>
 operator-(ColumnVector<long double> v1,
