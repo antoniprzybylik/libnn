@@ -4,6 +4,7 @@
 #ifndef NEURON_H_
 #define NEURON_H_
 
+#include <cstddef>
 #include <vector>
 
 typedef long double rl_t;
