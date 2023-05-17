@@ -123,6 +123,11 @@ void Sum::step(const std::vector<rl_t> &p)
 	}
 }
 
+const std::vector<rl_t> &Sum::get_params(void) const
+{
+	return weights;
+}
+
 const std::vector<rl_t> &Sum::get_delta(void) const
 {
 	return accumulated_delta;

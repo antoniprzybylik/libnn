@@ -52,6 +52,11 @@ void Sink::step(const std::vector<rl_t> &p)
 
 static const std::vector<rl_t> empty_vector;
 
+const std::vector<rl_t> &Sink::get_params(void) const
+{
+	return empty_vector;
+}
+
 const std::vector<rl_t> &Sink::get_delta(void) const
 {
 	return empty_vector;

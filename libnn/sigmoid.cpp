@@ -165,6 +165,11 @@ void Sigmoid::step(const std::vector<rl_t> &p)
 	}
 }
 
+const std::vector<rl_t> &Sigmoid::get_params(void) const
+{
+	return weights;
+}
+
 const std::vector<rl_t> &Sigmoid::get_delta(void) const
 {
 	return accumulated_delta;

@@ -46,6 +46,11 @@ void Constant::step(const std::vector<rl_t> &p)
 
 static const std::vector<rl_t> empty_vector;
 
+const std::vector<rl_t> &Constant::get_params(void) const
+{
+	return empty_vector;
+}
+
 const std::vector<rl_t> &Constant::get_delta(void) const
 {
 	return empty_vector;

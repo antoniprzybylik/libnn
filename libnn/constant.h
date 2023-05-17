@@ -24,6 +24,7 @@ public:
 	void zero_delta(void) override;
 	void step(const std::vector<rl_t>&) override;
 
+	const std::vector<rl_t> &get_params(void) const override;
 	const std::vector<rl_t> &get_delta(void) const override;
 
 	void save(void) override;
