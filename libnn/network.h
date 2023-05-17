@@ -32,6 +32,7 @@ public:
 	void zero_grad(void);
 	void backward(void);
 	RowVector<rl_t> accumulated_grad(void);
+	RowVector<rl_t> params(void);
 	void step(const ColumnVector<rl_t>&);
 
 	void save(void);
@@ -277,6 +278,39 @@ RowVector<rl_t> Network<in_size,
 	apply_forward(sources, retrieve_grad_op);
 
 	return g;
+}
+
+[[maybe_unused]] static
+void retrieve_params_op(Neuron *const n)
+{
+	const std::vector<rl_t> &params = n->get_params();
+	std::vector<rl_t>::const_iterator it;
+
+	for (it = params.begin();
+	     it != params.end(); it++) {
+		(*v1)[v1_idx++] = *it;
+	}
+}
+
+template<int in_size, int out_size,
+	 int neurons_cnt, int params_cnt>
+RowVector<rl_t> Network<in_size,
+			out_size,
+			neurons_cnt,
+			params_cnt>::params(void)
+{
+	static RowVector<rl_t> params(params_cnt);
+	std::vector<Neuron*> sources(in_size);
+	
+	std::transform(input_layer.begin(), input_layer.end(),
+		       sources.begin(), [](const std::shared_ptr<Constant> &smart_ptr)
+				        { return smart_ptr.get(); });
+
+	v1 = &params;
+	v1_idx = 0;
+	apply_forward(sources, retrieve_params_op);
+
+	return params;
 }
 
 static const Vector<rl_t> *v2;
