@@ -218,6 +218,7 @@ void train_net(void)
 			// Hestenes-Stiefel
 			beta = (w * (w - wm1).transpose()) /
 			       (d * (wm1 - w).transpose());
+
 			d = -1.0L*g + beta*d;
 		}
 	
