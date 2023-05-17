@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "vector.h"
 #include "matrix.h"
 
@@ -77,6 +79,20 @@ BasicVector<T>(new T[v.len], v.len)
 
 	for (i = 0; i < this->len; i++)
 		this->tab[i] = v.tab[i];
+}
+
+template<typename T>
+T norm(const BasicVector<T> &v)
+{
+	T sum ;
+
+	sum = 0;
+	for (typename BasicVector<T>::const_iterator it = v.cbegin();
+	     it != v.cend(); it++) {
+		sum += (*it)*(*it);
+	}
+
+	return std::sqrt(sum);
 }
 
 template<typename T>
@@ -378,6 +394,8 @@ template class BasicVector<long double>;
 template class Vector<long double>;
 template class RowVector<long double>;
 template class ColumnVector<long double>;
+
+template long double norm(const BasicVector<long double> &v);
 
 template std::ostream &operator<<(std::ostream &os,
 				  const RowVector<long double> &V);

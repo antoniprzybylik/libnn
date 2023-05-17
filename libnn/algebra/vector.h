@@ -56,6 +56,9 @@ public:
 
 	friend class RowVector<T>;
 	friend class RowReference<T>;
+
+	template<typename U> friend
+	U norm(const BasicVector<U> &v);
 };
 
 template<typename T>
