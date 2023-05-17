@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <cstring>
 
 #include "nice_net.h"
 #include "constant.h"
@@ -18,6 +19,8 @@ NiceNet::NiceNet(void) :
 Network()
 {
 	size_t i, j;
+
+	strcpy(this->magic, "A3b78x2Q");
 
 	/* Warstwa wejściowa. */
 	this->input_layer[0] = std::make_shared<Constant>(0.0L);
