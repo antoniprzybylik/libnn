@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 #include "simple_net.h"
 #include "algebra/vector.h"
@@ -162,11 +163,18 @@ rl_t choose_step(const RowVector<rl_t> &g)
 	return p;
 }
 
+static
+std::vector<rl_t> saved_step;
+static
+std::vector<rl_t> saved_cost;
+static
+std::vector<rl_t> saved_gnorm;
+
 void train_net(void)
 {
 	size_t i;
 	RowVector<rl_t> g(params_cnt);
-	long double p;
+	long double p, c, gn;
 
 	/* Wyłączamy synchronizację wypisywania. */
 	std::cout.tie(0);
@@ -192,18 +200,57 @@ void train_net(void)
 		nn.step(-p*g);
 		
 		y_values = net_forward(x_values);
+
+		c = cost(y_values, d_values);
+		gn = norm(g);
 		std::cout << std::fixed << std::setprecision(10)
 			  << "I "
 			  << std::setfill(' ') << std::setw(8)
 			  << i << ".  "
 			  << "Cost: "
 			  << std::setfill(' ') << std::setw(12)
-			  << cost(y_values, d_values) << ".  "
+			  << c << ".  "
 			  << "Step: "
 			  << std::setfill(' ') << std::setw(12)
 			  << p << ".  "
 			  << "|g|: "
 			  << std::setfill(' ') << std::setw(12)
-			  << norm(g) << "\n";
+			  << gn << "\n";
+
+		/* Zapisujemy przebieg wartości. */
+		saved_step.push_back(p);
+		saved_cost.push_back(c);
+		saved_gnorm.push_back(gn);
 	}
+
+	std::ofstream fp;
+	fp.open("step.json");
+	fp << '[';
+	for (std::vector<rl_t>::const_iterator it =
+			saved_step.cbegin();
+	     it != (saved_step.end()-1); it++) {
+		fp << *it << ", ";
+	}
+	fp << *saved_step.rbegin() << ']';
+	fp.close();
+
+	fp.open("cost.json");
+	fp << '[';
+	for (std::vector<rl_t>::const_iterator it =
+			saved_cost.cbegin();
+	     it != (saved_cost.end()-1); it++) {
+		fp << *it << ", ";
+	}
+	fp << *saved_cost.rbegin() << ']';
+	fp.close();
+
+	fp.open("gnorm.json");
+	fp << '[';
+	for (std::vector<rl_t>::const_iterator it =
+			saved_gnorm.cbegin();
+	     it != (saved_gnorm.end()-1); it++) {
+		fp << *it << ", ";
+	}
+	fp << *saved_gnorm.rbegin() << ']';
+	fp.close();
 }
