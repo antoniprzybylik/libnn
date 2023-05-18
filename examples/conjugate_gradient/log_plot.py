@@ -15,6 +15,7 @@ def main():
         x = [x for x in range(1, len(data)+1)]
 
         plt.plot(x, data)
+        plt.legend((args.filename.rsplit('.', 1)[0],))
         plt.yscale('symlog')
         plt.grid()
         plt.show()
