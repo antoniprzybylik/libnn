@@ -4,6 +4,8 @@
 #include <json/json.h>
 #include <json/value.h>
 
+#include <sstream>
+#include <iomanip>
 #include <vector>
 #include <array>
 #include <queue>
@@ -374,8 +376,11 @@ Json::Value Network<in_size,
 			Json::Value &d_neuron = d_layer[j];
 			const std::vector<rl_t> &params = layers[i][j]->get_params();
 
-			for (k = 0; k < (int) params.size(); k++)
-				d_neuron[k] = (double) params[k];
+			for (k = 0; k < (int) params.size(); k++) {
+				d_neuron[k] = (std::stringstream() <<
+					       std::fixed << std::setprecision(21) <<
+					       params[k]).str();
+			}
 		}
 	}
 
@@ -403,8 +408,11 @@ void Network<in_size,
 		for (j = 0; j < (int) layers[i].size(); j++) {
 			Json::Value &d_neuron = d_layer[j];
 			params.resize(layers[i][j]->params_cnt());
-			for (k = 0; k < (int) params.size(); k++)
-				params[k] = atof(d_neuron[k].asString().c_str());
+			for (k = 0; k < (int) params.size(); k++) {
+				(std::stringstream() <<
+				 d_neuron[k].asString())
+				>> params[k];
+			}
 
 			layers[i][j]->set_params(params);
 		}
