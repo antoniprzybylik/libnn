@@ -21,7 +21,7 @@ Sigmoid::~Sigmoid(void)
 static inline
 rl_t sigma(rl_t x)
 {
-	return (tanhl(x/2)+1)/2;
+	return (tanhl(x/2.0L)+1.0L)/2.0L;
 }
 
 void Sigmoid::forward(void)
