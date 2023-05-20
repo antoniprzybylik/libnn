@@ -179,23 +179,21 @@ void train_net(const int argc, const char *const argv[])
 	std::ofstream of;
 	std::ifstream ifs;
 
+	/* Wektor gradientu i
+	 * poprzedniego gradientu. */
 	RowVector<rl_t> g(params_cnt);
-	long double p, c, gn;
-
-	/* Wektor parametrów (wag) sieci
-	 * z poprzedniego kroku. */
-	RowVector<rl_t> w(params_cnt);
-	RowVector<rl_t> wm1(params_cnt);
+	RowVector<rl_t> gm1(params_cnt);
 
 	/* Wektor kierunku. */
 	RowVector<rl_t> d(params_cnt);
 
 	rl_t beta;
+	long double p, c, gn;
 
 	/* Wyłączamy synchronizację wypisywania. */
 	std::cout.tie(0);
 
-	/* */
+	/* Możliwość wczytania parametrów sieci z pliku. */
 	if (argc > 2) {
 		std::cout << "Too many parameters.\n";
 		return;
@@ -236,25 +234,19 @@ void train_net(const int argc, const char *const argv[])
 	of.close();
 
 	/* Trenujemy sieć. */
-	for (i = 0; i < 10000; i++) {
-		w = nn.params();
+	for (i = 0; i < 2000; i++) {
+		gm1 = g;
 		g = net_accumulated_grad(x_values, d_values);
 
-		if (i == 0) {
+		if (i % params_cnt == 0) {
 			d = -1.0L*g;
 		} else {
-			// Polak-Ribiere
-			//beta = (w * (w - wm1).transpose()) /
-			//       (wm1 * wm1.transpose());
-
-			// Hestenes-Stiefel
-			beta = (w * (w - wm1).transpose()) /
-			       (d * (wm1 - w).transpose());
+			/* Polak-Ribiere */
+			beta = (g * (g - gm1).transpose()) /
+			       (gm1 * gm1.transpose());
 
 			d = -1.0L*g + beta*d;
 		}
-	
-		wm1 = w;
 
 		p = choose_step(d);
 		nn.step(p*d);
