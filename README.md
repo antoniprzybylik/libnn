@@ -16,6 +16,10 @@ use of this library in `examples` directory.
 | :--: |
 | *Results of function approximation by network with 6 sigmoidal neurons.*    |
 
+| ![](docs/rel6.png) |
+| :--: |
+| *XY relation plot.*    |
+
 | ![](docs/demo25.png) |
 | :--: |
 | *Results of 2D function approximation by network with 2 layers with 5 sigmoidal neurons each.* |
