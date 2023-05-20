@@ -170,9 +170,12 @@ std::vector<rl_t> saved_cost;
 static
 std::vector<rl_t> saved_gnorm;
 
-void train_net(void)
+void train_net(const int argc, const char *const argv[])
 {
 	size_t i;
+	std::ofstream of;
+	std::ifstream ifs;
+
 	RowVector<rl_t> g(params_cnt);
 	long double p, c, gn;
 
@@ -189,12 +192,32 @@ void train_net(void)
 	/* Wyłączamy synchronizację wypisywania. */
 	std::cout.tie(0);
 
+	/* Możliwość wczytania parametrów sieci z pliku. */
+	if (argc > 2) {
+		std::cout << "Too many parameters.\n";
+		return;
+	}
+
+	if (argc == 2) {
+		Json::Reader reader;
+		Json::Value root;
+
+		ifs.open(argv[1]);
+		if (!reader.parse(ifs, root)) {
+			std::cout << "Corrupted file.\n";
+			return;
+		}
+
+		nn.load(root);
+		ifs.close();
+	}
+
 	/* Ładowanie danych. */
 	for (i = 0; i < PROBES; i++) {
 		x_values.push_back(ColumnVector<rl_t>({STEP*i}));
 		d_values.push_back(ColumnVector<rl_t>({data[i]}));
 	}
-
+	
 	/* Wyjście niewytrenowanej sieci. */
 	y_values = net_forward(x_values);
 	std::cout << "Initial cost: "
@@ -203,21 +226,28 @@ void train_net(void)
 	print_network_output(y_values, std::string("y_values"));
 	std::cout << std::endl;
 
+	/* Zapisujemy w pliku parametry
+	 * niewytrenowanej sieci. */
+	of.open("initial_params.json");
+	of << nn.dump();
+	of.close();
+
 	/* Trenujemy sieć. */
 	for (i = 0; i < 10000; i++) {
 		w = nn.params();
 		g = net_accumulated_grad(x_values, d_values);
 
-		if (i == 0) {
+		if (i % params_cnt == 0) {
+		//if (i == 0) {
 			d = -1.0L*g;
 		} else {
 			// Polak-Ribiere
-			//beta = (w * (w - wm1).transpose()) /
-			//       (wm1 * wm1.transpose());
+			beta = (w * (w - wm1).transpose()) /
+			       (wm1 * wm1.transpose());
 
 			// Hestenes-Stiefel
-			beta = (w * (w - wm1).transpose()) /
-			       (d * (wm1 - w).transpose());
+			//beta = (w * (w - wm1).transpose()) /
+			//       (d * (wm1 - w).transpose());
 
 			d = -1.0L*g + beta*d;
 		}
@@ -251,34 +281,39 @@ void train_net(void)
 		saved_gnorm.push_back(gn);
 	}
 
-	std::ofstream fp;
-	fp.open("step.json");
-	fp << '[';
+	/* Zapisujemy w pliku parametry
+	 * wytrenowanej sieci. */
+	of.open("final_params.json");
+	of << nn.dump();
+	of.close();
+
+	of.open("step.json");
+	of << '[';
 	for (std::vector<rl_t>::const_iterator it =
 			saved_step.cbegin();
 	     it != (saved_step.end()-1); it++) {
-		fp << *it << ", ";
+		of << *it << ", ";
 	}
-	fp << *saved_step.rbegin() << ']';
-	fp.close();
+	of << *saved_step.rbegin() << ']';
+	of.close();
 
-	fp.open("cost.json");
-	fp << '[';
+	of.open("cost.json");
+	of << '[';
 	for (std::vector<rl_t>::const_iterator it =
 			saved_cost.cbegin();
 	     it != (saved_cost.end()-1); it++) {
-		fp << *it << ", ";
+		of << *it << ", ";
 	}
-	fp << *saved_cost.rbegin() << ']';
-	fp.close();
+	of << *saved_cost.rbegin() << ']';
+	of.close();
 
-	fp.open("gnorm.json");
-	fp << '[';
+	of.open("gnorm.json");
+	of << '[';
 	for (std::vector<rl_t>::const_iterator it =
 			saved_gnorm.cbegin();
 	     it != (saved_gnorm.end()-1); it++) {
-		fp << *it << ", ";
+		of << *it << ", ";
 	}
-	fp << *saved_gnorm.rbegin() << ']';
-	fp.close();
+	of << *saved_gnorm.rbegin() << ']';
+	of.close();
 }

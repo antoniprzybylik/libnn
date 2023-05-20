@@ -4,8 +4,8 @@
 #include "simple_net.h"
 #include "training.h"
 
-int main(void)
+int main(const int argc, const char *const argv[])
 {
-	train_net();
+	train_net(argc, argv);
 	return(0);
 }

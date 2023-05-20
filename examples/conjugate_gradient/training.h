@@ -4,6 +4,6 @@
 #ifndef TRAINING_H_
 #define TRAINING_H_
 
-void train_net(void);
+void train_net(const int argc, const char *const argv[]);
 
 #endif /* TRAINING_H_ */

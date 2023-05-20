@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <cstring>
 
 #include "simple_net.h"
 #include "constant.h"
@@ -14,6 +15,8 @@ SimpleNet::SimpleNet(void) :
 Network()
 {
 	size_t i;
+
+	strcpy(this->magic, "a82b3Xv1");
 
 	this->input_layer[0] = std::make_shared<Constant>(0.0L);
 	
