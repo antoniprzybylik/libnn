@@ -23,3 +23,7 @@ use of this library in `examples` directory.
 | ![](docs/demo25.png) |
 | :--: |
 | *Results of 2D function approximation by network with 2 layers with 5 sigmoidal neurons each.* |
+
+| ![](docs/rel25.png) |
+| :--: |
+| *XY relation plot.* |
