@@ -7,6 +7,8 @@
 
 #include "gelu.h"
 
+#define PI (3.141592653589793238462L)
+
 GeLU::GeLU(void) :
 Neuron(),
 weights(),
@@ -22,8 +24,8 @@ static inline
 rl_t gerror(rl_t x)
 {
 	return 0.5L*x*
-	       (1 + tanhl(sqrtl(2.0L/std::numbers::pi)*
-		         (x + 0.044715*x*x*x)));
+	       (1.0L + tanhl(sqrtl(2.0L/PI)*
+		             (x + 0.044715L*x*x*x)));
 }
 
 void GeLU::forward(void)
@@ -46,20 +48,22 @@ void GeLU::forward(void)
 static inline
 rl_t gerror_derivative(rl_t x)
 {
-	return
-	 0.05351611220*x*x*x -
-	 0.05351611220*tanhl(0.03567740814*x*x*x
-               + 0.7978845608*x) *
-	 tanhl(0.03567740814*x*x*x
-               + 0.7978845608*x) *
-	 x*x*x +
-	 0.3989422804*x -
-	 0.3989422804 *
-         tanh(0.03567740814*x*x*x + 0.7978845608*x) *
-         tanh(0.03567740814*x*x*x + 0.7978845608*x) * x +
-         0.5000000000 +
-	 0.5000000000 * tanhl(0.03567740814*x*x*x +
-         0.7978845608*x);
+	return 0.05351611220L*x*x*x -
+	       0.05351611220L*
+	       tanhl(0.03567740814L*x*x*x +
+		     0.7978845608L*x)*
+	       tanhl(0.03567740814L*x*x*x +
+		     0.7978845608L*x)*x*x*x +
+	       0.3989422804L*x -
+	       0.3989422804L*
+	       tanh(0.03567740814L*x*x*x +
+		    0.7978845608L*x)*
+	       tanh(0.03567740814L*x*x*x +
+		    0.7978845608L*x)*x +
+	       0.5000000000L +
+	       0.5000000000L*
+	       tanhl(0.03567740814L*x*x*x +
+		     0.7978845608L*x);
 }
 
 void GeLU::back(void)
