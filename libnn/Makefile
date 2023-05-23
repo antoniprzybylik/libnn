@@ -14,6 +14,7 @@ constant.o \
 sink.o \
 sigmoid.o \
 sum.o \
+gelu.o \
 algebra/algebra.o \
 
 LIBS = \
