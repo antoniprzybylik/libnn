@@ -128,6 +128,8 @@ public:
 template<typename T>
 class Vector : public BasicVector<T> {
 public:
+	Vector(T *tab, size_t len) :
+		BasicVector<T>(tab, len) {};
 	Vector(size_t len);
 	Vector(std::initializer_list<T> c);
 	Vector(const Vector&);
@@ -147,6 +149,8 @@ public:
 template<typename T>
 class RowVector : public Vector<T> {
 public:
+	RowVector(T *tab, size_t len) :
+		Vector<T>(tab, len) {};
 	RowVector(size_t len) : Vector<T>(len) {};
 	RowVector(std::initializer_list<T> c) : Vector<T>(c) {};
 	RowVector(const Vector<T> &v) : Vector<T>(v) {};
@@ -199,6 +203,8 @@ public:
 template<typename T>
 class ColumnVector : public Vector<T> {
 public:
+	ColumnVector(T *tab, size_t len) :
+		Vector<T>(tab, len) {};
 	ColumnVector(size_t len) : Vector<T>(len) {};
 	ColumnVector(std::initializer_list<T> c) : Vector<T>(c) {};
 	ColumnVector(const Vector<T> &v) : Vector<T>(v) {};
