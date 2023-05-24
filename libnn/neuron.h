@@ -30,7 +30,7 @@ public:
 
 	virtual void attach(Neuron*) = 0;
 
-	rl_t out(void) const;
+	virtual rl_t out(void) const;
 	virtual rl_t out_back(Neuron*) const = 0;
 
 	virtual void accumulate(void) = 0;

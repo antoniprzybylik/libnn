@@ -15,6 +15,7 @@ sink.o \
 sigmoid.o \
 sum.o \
 gelu.o \
+softmax.o \
 algebra/algebra.o \
 
 LIBS = \
@@ -31,11 +32,13 @@ compile: algebra $(OBJS)
 
 build: CXXFLAGS += -O3
 build: compile
+	rm -f $(TARGET)
 	ar -rcT $(TARGET) $(OBJS) $(LIBS)
 	ranlib $(TARGET)
 
-debug: CXXFLAGS += -DGLIBCXX_DEBUG -g
+debug: CXXFLAGS += -O0 -DGLIBCXX_DEBUG -g
 debug: clean | compile
+	rm -f $(TARGET)
 	ar -rcT $(TARGET) $(OBJS) $(LIBS)
 	ranlib $(TARGET)
 
