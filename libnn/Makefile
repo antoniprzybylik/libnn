@@ -6,7 +6,6 @@ TARGET = libnn.a
 CXX = g++
 
 CXXFLAGS = -MMD -MP -std=c++20 -pedantic -Wall
-LDFLAGS = -fPIC -lm
 
 OBJS = \
 neuron.o \
